@@ -198,7 +198,7 @@ const InsightsPage: React.FC = () => {
         setIsGeneratingInsight(true);
         setAiInsight('');
         try {
-            const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+            const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
             const prompt = `You are a professional trading coach. Based on the following performance metrics, identify the top 3 areas for improvement. For each area, provide one specific, actionable suggestion. Metrics: ${JSON.stringify(metrics, null, 2)}`;
             
             const schema = {
