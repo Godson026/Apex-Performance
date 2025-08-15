@@ -1,0 +1,162 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apex Performance</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles/animations.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+            },
+            colors: {
+              primary: {
+                light: '#A78BFA', // violet-400
+                DEFAULT: '#8B5CF6', // violet-500
+                dark: '#7C3AED',  // violet-600
+              },
+              success: '#10B981', // emerald-500
+              danger: '#EF4444',  // red-500
+              warning: '#F59E0B', // amber-500
+              info: '#0EA5E9',   // sky-500
+              
+              'light-background': '#F1F5F9', 
+              'dark-background': '#020617', // slate-950 (very dark)
+
+              'light-sidebar': '#FFFFFF',
+              'dark-sidebar': '#0F172A', // slate-900
+              
+              'light-card': '#FFFFFF',
+              'dark-card': '#1E293B', // slate-800
+              
+              'light-text': '#1E293B',
+              'dark-text': '#E2E8F0', // slate-200
+              
+              'light-text-secondary': '#64748B',
+              'dark-text-secondary': '#94A3B8', // slate-400
+              
+              'light-border': '#CBD5E1',
+              'dark-border': '#334155', // slate-700
+
+              'slate': { 
+                50: '#f8fafc', 100: '#f1f5f9', 200: '#e2e8f0', 300: '#cbd5e1',
+                400: '#94a3b8', 500: '#64748b', 600: '#475569', 700: '#334155',
+                800: '#1e293b', 900: '#0f172a', 950: '#020617'
+              },
+            },
+            animation: {
+                'slow-spin-clockwise': 'slow-spin-clockwise 25s linear infinite',
+                'slow-spin-counter-clockwise': 'slow-spin-counter-clockwise 25s linear infinite',
+                'gentle-float': 'gentle-float 6s ease-in-out infinite',
+                'subtle-pulse-glow': 'subtle-pulse-glow 3.5s ease-in-out infinite', // Adjusted duration
+                'animated-grid': 'animated-grid 3s linear infinite',
+                'slow-scale-fade': 'slow-scale-fade 10s ease-in-out infinite',
+                'data-glow-line': 'data-glow-line 4s ease-in-out infinite alternate',
+                'background-shine': 'background-shine 15s linear infinite',
+                'hue-rotate-pulse': 'hue-rotate-pulse 10s ease-in-out infinite alternate',
+            },
+            keyframes: {
+                'slow-spin-clockwise': { from: { transform: 'rotate(0deg)' }, to: { transform: 'rotate(360deg)' } },
+                'slow-spin-counter-clockwise': { from: { transform: 'rotate(0deg)' }, to: { transform: 'rotate(-360deg)' } },
+                'gentle-float': { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-12px)' } }, // Slightly more float
+                'subtle-pulse-glow': { // Enhanced glow
+                    '0%, 100%': { 
+                        opacity: '0.9', 
+                        transform: 'scale(1)',
+                        filter: 'drop-shadow(0 0 6px rgba(167, 139, 250, 0.35)) drop-shadow(0 0 12px rgba(167, 139, 250, 0.25))',
+                    },
+                    '50%': { 
+                        opacity: '1', 
+                        transform: 'scale(1.03)', // Slightly more pronounced scale
+                        filter: 'drop-shadow(0 0 12px rgba(167, 139, 250, 0.55)) drop-shadow(0 0 25px rgba(167, 139, 250, 0.4))',
+                    },
+                },
+                'animated-grid': { '0%': { backgroundPosition: '0 0' }, '100%': { backgroundPosition: '50px 50px' } },
+                'slow-scale-fade': { '0%, 100%': { transform: 'scale(1)', opacity: '0.7' }, '50%': { transform: 'scale(1.05)', opacity: '1' } },
+                'data-glow-line': { '0%': { strokeDashoffset: '200' , opacity: '0.5'}, '50%': { strokeDashoffset: '0', opacity: '1'}, '100%': { strokeDashoffset: '-200', opacity: '0.5'} },
+                'background-shine': {
+                  '0%': { backgroundPosition: '-200% center' },
+                  '100%': { backgroundPosition: '200% center' },
+                },
+                'hue-rotate-pulse': {
+                  '0%, 100%': { filter: 'hue-rotate(0deg) brightness(1)' },
+                  '50%': { filter: 'hue-rotate(15deg) brightness(1.1)' },
+                }
+            },
+            textShadow: { // Custom text shadow utilities
+              'sm-glow-primary': '0 0 5px var(--tw-shadow-color), 0 0 10px var(--tw-shadow-color)',
+              'md-glow-primary': '0 0 8px var(--tw-shadow-color), 0 0 15px var(--tw-shadow-color)',
+              'sm-glow-white': '0 0 5px rgba(255,255,255,0.7), 0 0 10px rgba(255,255,255,0.5)',
+            },
+            transitionDelay: { '1000': '1000ms', '1500': '1500ms', '2000': '2000ms', '3000': '3000ms' },
+          }
+        },
+        plugins: [ // Adding plugin for text-shadow
+          function({ addUtilities, theme, e }) {
+            const newUtilities = {};
+            Object.entries(theme('textShadow')).forEach(([key, value]) => {
+              newUtilities[`.${e(`text-shadow-${key}`)}`] = { textShadow: value };
+            });
+            addUtilities(newUtilities, ['responsive', 'hover']);
+          }
+        ]
+      }
+    </script>
+    <style>
+      html.dark .recharts-default-tooltip { background-color: #1E293B !important; border-color: #334155 !important; color: #E2E8F0 !important; }
+      html:not(.dark) .recharts-default-tooltip { background-color: #FFFFFF !important; border-color: #CBD5E1 !important; color: #1E293B !important; }
+      html.dark .recharts-legend-item-text { color: #94A3B8 !important; opacity: 1; font-size: 0.75rem; }
+      html:not(.dark) .recharts-legend-item-text { color: #64748B !important; opacity: 1; font-size: 0.75rem; }
+      html.dark .recharts-cartesian-axis-tick-value { fill: #94A3B8 !important; opacity: 1; }
+      html:not(.dark) .recharts-cartesian-axis-tick-value { fill: #64748B !important; opacity: 1; }
+      html:not(.dark) ::placeholder { color: #64748B; opacity: 1; }
+      html.dark ::placeholder { color: #64748B; opacity: 1; }
+      html:not(.dark) button.bg-primary-DEFAULT { color: #1E293B !important; }
+      html.dark button.bg-primary-DEFAULT { color: #FFFFFF !important; }
+
+      .noise-texture::before {
+        content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        opacity: 0.02; /* Even more subtle for the futuristic look */
+        pointer-events: none; z-index: 0; 
+      }
+      .animation-delay-1000 { animation-delay: 1000ms !important; }
+      .animation-delay-1500 { animation-delay: 1500ms !important; }
+      .animation-delay-2000 { animation-delay: 2000ms !important; }
+      .animation-delay-3000 { animation-delay: 3000ms !important; }
+      body { font-family: 'Inter', sans-serif; }
+      ::selection {
+        background-color: #8B5CF6; /* primary-DEFAULT */
+        color: white;
+      }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@^19.1.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.1.0/",
+    "react-router-dom": "https://esm.sh/react-router-dom@^7.6.2",
+    "react/": "https://esm.sh/react@^19.1.0/",
+    "recharts": "https://esm.sh/recharts@^2.15.3",
+    "recharts/": "https://esm.sh/recharts@^2.15.3/",
+    "@supabase/supabase-js": "https://esm.sh/@supabase/supabase-js@2",
+    "@google/genai": "https://esm.sh/@google/genai?bundle"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body class="antialiased font-sans bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text">
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+</body>
+</html>
